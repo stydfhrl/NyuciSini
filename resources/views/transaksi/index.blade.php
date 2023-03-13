@@ -23,7 +23,7 @@
                 <th class="fw-bold text-center">Paket Laundry</th>
                 <th class="fw-bold text-center">Status</th>
                 <th class="fw-bold text-center">Keterangan</th>
-                <th class="fw-bold text-center">Diskon</th>
+                {{-- <th class="fw-bold text-center">Diskon</th> --}}
                 <th class="fw-bold text-center">Total</th>
                 <th class="fw-bold text-center">Diinput Oleh</th>
                 <th class="fw-bold text-center">Action</th>
@@ -41,7 +41,7 @@
                     <td class="text-center fs-6">{{$idx -> transaksipaket-> jenis}}</td>
                     <td class="text-center fs-6">{{$idx -> status}}</td>
                     <td class="text-center fs-6">{{$idx -> keterangan}}</td>
-                    <td class="text-center fs-6">{{$idx -> diskon}} %</td>
+                    {{-- <td class="text-center fs-6">{{$idx -> diskon}} %</td> --}}
                     <td class="text-center fs-6">Rp. {{number_format($idx->total)}}</td>
                     <td class="text-center fs-6">{{$idx -> transaksiuser -> nama}}</td>
                   {{-- <td class="text-danger">{{$idx ->}}<i class="mdi mdi-arrow-down"></i></td> --}}
