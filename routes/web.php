@@ -43,7 +43,13 @@ Route::get('/admin', function () {
 Route::get('/karyawan', function () {
     return view('dashboard');
 });
-// ? end Admin
+// ? end karyawan
+
+// ? owner Dashboard
+Route::get('/owner', function () {
+    return view('dashboard');
+});
+// ? end owner
 
 // ? Sub Menu Components
 Route::resource('data-karyawan', DataKaryawanController::class)->middleware('auth');
@@ -58,6 +64,21 @@ Route::resource('data-laundry', PaketLaundriesController::class)->middleware('au
 
 Route::resource('data-transaksi', TransaksiController::class)->middleware('auth');
 // ? End Sub Menu Components
+
+//? Laporan Transaksi
+Route::get('/laporan', function () {
+    return view('laporan');
+})->middleware('auth');
+Route::get('/laporan/laporan-general',[TransaksiController::class,'LaporanGeneral'])->middleware('auth');
+
+Route::get('/laporan-tanggal', [TransaksiController::class, 'LaporanTanggal'])->name('laporan')->middleware('auth');
+//? End Laporan Transaksi
+
+
+// =================== Export PDF =================== //
+Route::get('/cetak-pdf/{id}', [TransaksiController::class, 'cetakPDF'])->name('cetak-pdf');
+
+
 
 Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
 

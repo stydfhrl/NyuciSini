@@ -18,14 +18,14 @@
             <thead>
               <tr>
                 <th class="fw-bold text-center">No</th>
-                <th class="fw-bold text-center">Nama Outlet</th>
                 <th class="fw-bold text-center">Nama Customer</th>
+                <th class="fw-bold text-center">Dari Outlet</th>
                 <th class="fw-bold text-center">Paket Laundry</th>
-                <th class="fw-bold text-center">Nama Penginput</th>
                 <th class="fw-bold text-center">Status</th>
                 <th class="fw-bold text-center">Keterangan</th>
                 <th class="fw-bold text-center">Diskon</th>
                 <th class="fw-bold text-center">Total</th>
+                <th class="fw-bold text-center">Diinput Oleh</th>
                 <th class="fw-bold text-center">Action</th>
               </tr>
             </thead>
@@ -36,27 +36,29 @@
               @foreach ($data as $idx)
                 <tr>
                     <td class="fw-semibold text-center fs-6">{{$no++}}</td>
-                    <td class="text-center fs-6">{{$idx -> transaksioutlet -> nama}}</td>
                     <td class="text-center fs-6">{{$idx -> transaksicustomer -> nama}}</td>
+                    <td class="text-center fs-6">{{$idx -> transaksioutlet -> nama}}</td>
                     <td class="text-center fs-6">{{$idx -> transaksipaket-> jenis}}</td>
-                    <td class="text-center fs-6">{{$idx -> transaksiuser -> nama}}</td>
                     <td class="text-center fs-6">{{$idx -> status}}</td>
                     <td class="text-center fs-6">{{$idx -> keterangan}}</td>
                     <td class="text-center fs-6">{{$idx -> diskon}} %</td>
                     <td class="text-center fs-6">Rp. {{number_format($idx->total)}}</td>
+                    <td class="text-center fs-6">{{$idx -> transaksiuser -> nama}}</td>
                   {{-- <td class="text-danger">{{$idx ->}}<i class="mdi mdi-arrow-down"></i></td> --}}
                   <td class=" d-flex gap-2 justify-content-center text-center">
                     <a href="{{ url('data-transaksi/'.$idx->id)}}" class="btn btn-sm fw-semibold text-light rounded-2 bg-info"> <i class="fas fa-eye text-light"></i>
                       Detail
                     </a>
-                    <a href="{{ url('data-transaksi/'.$idx->id.'/edit')}}" class="btn btn-sm fw-semibold text-dark rounded-2 bg-warning"> <i class="fa-solid fa-pen-to-square"></i>
-                      Edit
-                    </a>
-                    <form action="{{ url('data-transaksi/'.$idx->id) }}" method="POST">
-                      @csrf
-                      @method('delete')
-                      <button type="submit" class="btn btn-sm fw-semibold text-white rounded-2 bg-danger delete" data-name="{{ $idx->nama }}"><i class="fa-solid fa-trash mr-1" style="font-size: 13px"></i>Delete</button>
-                    </form>
+                    @if (auth()->user()-> level == 'admin' && 'karyawan')
+                      <a href="{{ url('data-transaksi/'.$idx->id.'/edit')}}" class="btn btn-sm fw-semibold text-dark rounded-2 bg-warning"> <i class="fa-solid fa-pen-to-square"></i>
+                        Edit
+                      </a>
+                      <form action="{{ url('data-transaksi/'.$idx->id) }}" method="POST">
+                        @csrf
+                        @method('delete')
+                        <button type="submit" class="btn btn-sm fw-semibold text-white rounded-2 bg-danger delete" data-name="{{ $idx->nama }}"><i class="fa-solid fa-trash mr-1" style="font-size: 13px"></i>Delete</button>
+                      </form>
+                    @endif
                   </td>
                 </tr>
               @endforeach
@@ -96,12 +98,12 @@
   .then((willDelete) => {
     if (willDelete) {
       form.submit();
-      swal("Data berhasil di hapus", {
+      swal("Data berhasil dihapus", {
             icon: "success",
             });
     }else 
     {
-      swal("Data tidak jadi dihapus");
+      swal("Data gagal dihapus");
     }
   });
 });

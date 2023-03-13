@@ -46,7 +46,7 @@
       <div class="form-group">
         <h6>Nama Karyawan<span class="text-danger">*</span></h6>
         <select class="form-control" name="user_id"> 
-          <option disabled selected>Pilih Penginput</option>
+          <option disabled selected>Diinput Oleh</option>
           @foreach ($user as $idx)
             <option value="{{$idx->id}}">{{$idx->nama}}</option>
           @endforeach

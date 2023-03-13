@@ -47,14 +47,6 @@
                             <td>Rp. {{ number_format($data->biaya_tambahan) }}</td>
                         </tr>
                         <tr>
-                            <th>Status</th>
-                            <td>:</td>
-                            <td>{{ $data->status }}</td>
-                            <th>Dibayar</th>
-                            <td>:</td>
-                            <td>{{ $data->dibayar }}</td>
-                        </tr>
-                        <tr>
                             <th>Diskon</th>
                             <td>:</td>
                             <td>{{ $data->diskon }}%</td>
@@ -69,7 +61,7 @@
             </div>
 
             
-            {{-- <a class="btn btn-danger mt-5" href="{{ route('cetak-laporan-pdf', $data->id) }}" style="font-size: 14px"><i class="mr-2 fa-solid fa-file-pdf" ></i>PDF</a> --}}
+            <a class="btn btn-danger mt-5" href="{{ route('cetak-pdf', $data->id) }}" style="font-size: 14px"><i class="mr-2 fa-solid fa-file-pdf" ></i>PDF</a>
         </div>
     </div>
 </div>

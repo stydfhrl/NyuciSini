@@ -39,6 +39,43 @@ class TransaksiController extends Controller
         return view('transaksi.add', compact('data','customer','outlet','paketlaundry','user'));
     }
 
+            // Laporan 
+        public function LaporanGeneral (){
+            $outlet = Outlet::all();
+            $customer = Customer::all();
+            $paketlaundry = PaketLaundries::all();
+            $user = User::all();
+            $data = Transaksi::with('transaksioutlet','transaksicustomer','transaksipaket','transaksiuser')->get();
+            return view('transaksi.laporan-general', compact('data','customer','outlet','paketlaundry','user'));
+        }
+    
+        public function LaporanTanggal(Request $request)
+        {
+            $tanggal = $request->input('tgl');
+            $laporan = DB::table('transaksis')
+                    ->whereDate('tgl', $tanggal)
+                    ->join('outlets', 'transaksis.outlet_id', '=', 'outlets.id')
+                    ->join('customers', 'transaksis.customer_id', '=', 'customers.id')
+                    ->join('paket_laundries', 'transaksis.paket_id', '=', 'paket_laundries.id')
+                    ->join('users', 'transaksis.user_id', '=', 'users.id')
+                    ->select('transaksis.*', 'outlets.nama as nama_outlet', 'customers.nama as nama_customer', 'paket_laundries.jenis','paket_laundries.harga', 'users.nama')
+                    ->get();
+            return view('transaksi.laporan-tanggal', ['laporan' => $laporan]);
+        }
+        // End Laporan
+
+        public function cetakPDF($id)
+        {
+            $outlet = Outlet::find($id);
+            $customer = Customer::find($id);
+            $paketlaundry = PaketLaundries::find($id);
+            $user = User::find($id);
+            $data = Transaksi::with('transaksicustomer','transaksioutlet','transaksipaket','transaksiuser')->find($id);
+    
+            $pdf = PDF::loadView('transaksi.transaksi-invoice', compact('data','customer','outlet','paketlaundry','user'));
+            return $pdf->download('transaksi.transaksi-invoice' . $data->id . '.pdf');
+        }
+
     /**
      * Store a newly created resource in storage.
      */
@@ -53,8 +90,8 @@ class TransaksiController extends Controller
         $total = ($berat * $harga) + $biaya_tambahan;
 
         // Hitung diskon
-        $minimal_pembelian1 = 50000;
-        $minimal_pembelian2 = 100000;
+        $minimal_pembelian1 = 20000;
+        $minimal_pembelian2 = 50000;
         $diskon1 = 0.1; // diskon 10% untuk pembelian minimal 50000
         $diskon2 = 0.3; // diskon 30% untuk pembelian minimal 100000
 
@@ -109,15 +146,29 @@ class TransaksiController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $outlet = Outlet::all();
+        $customer = Customer::all();
+        $paketlaundry = PaketLaundries::all();
+        $user = User::all();
+        $data = Transaksi::findorfail($id);
+        return view('transaksi.edit', compact('data', 'outlet','customer','paketlaundry', 'user'));
     }
 
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
     /**
      * Update the specified resource in storage.
      */
     public function update(Request $request, string $id)
     {
-        //
+        $data = transaksi::findorfail($id);
+        $data->update($request->all());
+        return redirect('data-transaksi')->with('success','Status Transaksi Berhasil Diedit');
     }
 
     /**
@@ -125,6 +176,8 @@ class TransaksiController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $data = Transaksi::findorfail($id);
+        $data->delete();
+        return back()->with('destroy', "Transaksi Berhasil Dihapus");
     }
 }
